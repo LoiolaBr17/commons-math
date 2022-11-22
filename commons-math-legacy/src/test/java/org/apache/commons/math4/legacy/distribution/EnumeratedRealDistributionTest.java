@@ -94,57 +94,22 @@ public class EnumeratedRealDistributionTest {
     /**
      * Tests if the distribution returns proper probability values.
      */
-    @Test
-    public void testProbability() {
-        double[] points = new double[]{-2.0, -1.0, 0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0};
-        double[] results = new double[]{0, 0.2, 0, 0, 0, 0.5, 0, 0, 0, 0.3, 0};
-        for (int p = 0; p < points.length; p++) {
-            double density = testDistribution.density(points[p]);
-            Assert.assertEquals(results[p], density, 0.0);
-        }
-    }
+ 
 
     /**
      * Tests if the distribution returns proper density values.
      */
-    @Test
-    public void testDensity() {
-        double[] points = new double[]{-2.0, -1.0, 0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0};
-        double[] results = new double[]{0, 0.2, 0, 0, 0, 0.5, 0, 0, 0, 0.3, 0};
-        for (int p = 0; p < points.length; p++) {
-            double density = testDistribution.density(points[p]);
-            Assert.assertEquals(results[p], density, 0.0);
-        }
-    }
 
-    /**
-     * Tests if the distribution returns proper cumulative probability values.
-     */
-    @Test
-    public void testCumulativeProbability() {
-        double[] points = new double[]{-2.0, -1.0, 0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0};
-        double[] results = new double[]{0, 0.2, 0.2, 0.2, 0.2, 0.7, 0.7, 0.7, 0.7, 1.0, 1.0};
-        for (int p = 0; p < points.length; p++) {
-            double probability = testDistribution.cumulativeProbability(points[p]);
-            Assert.assertEquals(results[p], probability, 1e-10);
-        }
-    }
+
 
     /**
      * Tests if the distribution returns proper mean value.
      */
-    @Test
-    public void testGetNumericalMean() {
-        Assert.assertEquals(3.4, testDistribution.getMean(), 1e-10);
-    }
 
     /**
      * Tests if the distribution returns proper variance.
      */
-    @Test
-    public void testGetNumericalVariance() {
-        Assert.assertEquals(7.84, testDistribution.getVariance(), 1e-10);
-    }
+
 
     /**
      * Tests if the distribution returns proper lower bound.
@@ -169,7 +134,7 @@ public class EnumeratedRealDistributionTest {
     public void testSample() {
         final int n = 1000000;
         final ContinuousDistribution.Sampler sampler =
-            testDistribution.createSampler(RandomSource.XO_RO_SHI_RO_128_PP.create());
+        testDistribution.createSampler(RandomSource.XO_RO_SHI_RO_128_PP.create());
         final double[] samples = AbstractRealDistribution.sample(n, sampler);
         Assert.assertEquals(n, samples.length);
         double sum = 0;
@@ -182,15 +147,17 @@ public class EnumeratedRealDistributionTest {
         Assert.assertEquals("Mean", mean, sum / n, mean * 1e-2);
         final double var = testDistribution.getVariance();
         Assert.assertEquals("Variance", var, sumOfSquares / n - JdkMath.pow(sum / n, 2), var * 1e-2);
-    }
 
-    @Test
-    public void testIssue942() {
+
         List<Pair<Object,Double>> list = new ArrayList<>();
         list.add(new Pair<Object, Double>(new Object() {}, Double.valueOf(0)));
         list.add(new Pair<Object, Double>(new Object() {}, Double.valueOf(1)));
         final UniformRandomProvider rng = RandomSource.WELL_512_A.create();
         Assert.assertEquals(1, new EnumeratedDistribution<>(list).createSampler(rng).sample(1).length);
+
+        Assert.assertEquals(7.84, testDistribution.getVariance(), 1e-10);
+
+        Assert.assertEquals(3.4, testDistribution.getMean(), 1e-10);
     }
 
     @Test
@@ -242,5 +209,27 @@ public class EnumeratedRealDistributionTest {
         EnumeratedRealDistribution distribution = new EnumeratedRealDistribution(data);
         assertEquals(0.5, distribution.density(2), 0);
         assertEquals(0.5, distribution.cumulativeProbability(1), 0);
+
+        double[] points = new double[]{-2.0, -1.0, 0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0};
+        double[] results = new double[]{0, 0.2, 0.2, 0.2, 0.2, 0.7, 0.7, 0.7, 0.7, 1.0, 1.0};
+        for (int p = 0; p < points.length; p++) {
+            double probability = testDistribution.cumulativeProbability(points[p]);
+            Assert.assertEquals(results[p], probability, 1e-10);
+        }
+
+        double[] pointsTest1 = new double[]{-2.0, -1.0, 0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0};
+        double[] resultsTest1 = new double[]{0, 0.2, 0, 0, 0, 0.5, 0, 0, 0, 0.3, 0};
+        for (int p = 0; p < pointsTest1.length; p++) {
+            double density = testDistribution.density(pointsTest1[p]);
+            Assert.assertEquals(resultsTest1[p], density, 0.0);
+        }
+
+        double[] pointsTest2 = new double[]{-2.0, -1.0, 0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0};
+        double[] resultsTest2 = new double[]{0, 0.2, 0, 0, 0, 0.5, 0, 0, 0, 0.3, 0};
+        for (int p = 0; p < pointsTest2.length; p++) {
+            double density = testDistribution.density(pointsTest2[p]);
+            Assert.assertEquals(resultsTest2[p], density, 0.0);
+        }
     }
+
 }
